@@ -19,31 +19,22 @@ class _OpenCVAppState extends State<OpenCVApp> {
   Future<void> _process() async {
     try {
       final String? path = await platform.invokeMethod('processImage');
-      setState(() {
-        _image = path;
-      });
-    } catch (e) {
-      debugPrint("Error: $e");
-    }
+      setState(() { _image = path; });
+    } catch (e) { debugPrint("Error: $e"); }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('OpenCV Memory Fix')),
+      appBar: AppBar(title: const Text('OpenCV v9 Success')),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            if (_image != null) 
-              Image.file(File(_image!), height: 300)
-            else
-              const Text('No image processed'),
+            if (_image != null) Image.file(File(_image!), height: 300)
+            else const Text('No processed image'),
             const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _process, 
-              child: const Text('Run OpenCV')
-            ),
+            ElevatedButton(onPressed: _process, child: const Text('Run Processing')),
           ],
         ),
       ),
