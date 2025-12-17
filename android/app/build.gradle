@@ -12,6 +12,10 @@ android {
         targetSdkVersion 35
         versionCode 1
         versionName "1.0"
+        ndk {
+            // Ограничим архитектуры для ускорения CI, но можно оставить все
+            abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
+        }
     }
     packagingOptions {
         pickFirst 'lib/*/libc++_shared.so'

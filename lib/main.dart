@@ -30,7 +30,7 @@ class _OpenCVAppState extends State<OpenCVApp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('OpenCV Final Fix')),
+      appBar: AppBar(title: const Text('OpenCV Memory Fix')),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
