@@ -2,51 +2,39 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+void main() => runApp(const MaterialApp(home: OpenCVTest()));
 
-class MyApp extends StatefulWidget {
-  const MyApp({super.key});
-
+class OpenCVTest extends StatefulWidget {
+  const OpenCVTest({super.key});
   @override
-  State<MyApp> createState() => _MyAppState();
+  State<OpenCVTest> createState() => _OpenCVTestState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _OpenCVTestState extends State<OpenCVTest> {
   static const platform = MethodChannel('opencv_channel');
-  String? imagePath;
+  String? _path;
 
-  Future<void> processImage() async {
+  Future<void> _process() async {
     try {
-      final path = await platform.invokeMethod<String>('processImage');
-      setState(() {
-        imagePath = path;
-      });
-    } on PlatformException catch (e) {
-      print("Error: ${e.message}");
+      final String? result = await platform.invokeMethod('processImage');
+      setState(() => _path = result);
+    } catch (e) {
+      debugPrint("Error: $e");
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(title: const Text('Flutter + OpenCV')),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                onPressed: processImage,
-                child: const Text('Process Image'),
-              ),
-              const SizedBox(height: 20),
-              if (imagePath != null) Image.file(File(imagePath!)),
-            ],
-          ),
+    return Scaffold(
+      appBar: AppBar(title: const Text('OpenCV AndroidX Fix')),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (_path != null) Image.file(File(_path!), height: 300),
+            ElevatedButton(onPressed: _process, child: const Text('Process Image')),
+          ],
         ),
       ),
     );
   }
-}

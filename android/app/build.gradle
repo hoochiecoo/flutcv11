@@ -6,24 +6,14 @@ plugins {
 
 android {
     namespace "com.example.opencv_flutter_test"
-    compileSdkVersion flutter.compileSdkVersion
-    ndkVersion flutter.ndkVersion
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
-    }
-
-    kotlinOptions {
-        jvmTarget = '17'
-    }
-
+    compileSdkVersion 34
+    
     defaultConfig {
         applicationId "com.example.opencv_flutter_test"
         minSdkVersion 21
-        targetSdkVersion flutter.targetSdkVersion
-        versionCode flutterVersionCode.toInteger()
-        versionName flutterVersionName
+        targetSdkVersion 34
+        versionCode 1
+        versionName "1.0"
     }
 
     packagingOptions {
@@ -31,5 +21,3 @@ android {
         pickFirst 'lib/*/libopencv_java4.so'
     }
 }
-
-dependencies {}
