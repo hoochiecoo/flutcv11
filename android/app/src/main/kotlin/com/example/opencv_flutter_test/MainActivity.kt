@@ -30,9 +30,9 @@ class MainActivity: FlutterActivity() {
         OpenCVLoader.initDebug()
         val bmp = Bitmap.createBitmap(500, 500, Bitmap.Config.ARGB_8888)
         val canvas = android.graphics.Canvas(bmp)
-        canvas.drawColor(Color.WHITE)
-        val p = android.graphics.Paint().apply { color = Color.RED; strokeWidth = 20f; style = android.graphics.Paint.Style.STROKE }
-        canvas.drawRect(50f, 50f, 450f, 450f, p)
+        canvas.drawColor(Color.LTGRAY)
+        val p = android.graphics.Paint().apply { color = Color.MAGENTA; strokeWidth = 10f; style = android.graphics.Paint.Style.STROKE }
+        canvas.drawCircle(250f, 250f, 200f, p)
 
         val src = Mat()
         Utils.bitmapToMat(bmp, src)
@@ -42,7 +42,7 @@ class MainActivity: FlutterActivity() {
         val out = Bitmap.createBitmap(src.cols(), src.rows(), Bitmap.Config.ARGB_8888)
         Utils.matToBitmap(src, out)
 
-        val file = File(cacheDir, "result.png")
+        val file = File(cacheDir, "result_v6.png")
         FileOutputStream(file).use { out.compress(Bitmap.CompressFormat.PNG, 100, it) }
         return file.absolutePath
     }

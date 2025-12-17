@@ -18,15 +18,13 @@ class _OpenCVAppState extends State<OpenCVApp> {
     try {
       final String? path = await platform.invokeMethod('processImage');
       setState(() => _image = path);
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) { print(e); }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('OpenCV Fix v5')),
+      appBar: AppBar(title: const Text('OpenCV Fixed v6')),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
