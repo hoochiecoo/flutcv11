@@ -2,7 +2,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-void main() => runApp(const MaterialApp(home: OpenCVApp()));
+void main() {
+  runApp(const MaterialApp(home: OpenCVApp()));
+}
 
 class OpenCVApp extends StatefulWidget {
   const OpenCVApp({super.key});
@@ -17,22 +19,34 @@ class _OpenCVAppState extends State<OpenCVApp> {
   Future<void> _process() async {
     try {
       final String? path = await platform.invokeMethod('processImage');
-      setState(() => _image = path);
-    } catch (e) { print(e); }
+      setState(() {
+        _image = path;
+      });
+    } catch (e) {
+      debugPrint("Error: $e");
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('OpenCV Fixed v6')),
+      appBar: AppBar(title: const Text('OpenCV Final Fix')),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            if (_image != null) Image.file(File(_image!), height: 300),
-            ElevatedButton(onPressed: _process, child: const Text('Run OpenCV')),
+            if (_image != null) 
+              Image.file(File(_image!), height: 300)
+            else
+              const Text('No image processed'),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _process, 
+              child: const Text('Run OpenCV')
+            ),
           ],
         ),
       ),
     );
   }
+}
