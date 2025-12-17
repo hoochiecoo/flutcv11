@@ -14,6 +14,16 @@ android {
         versionName "1.0"
         ndk { abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86_64' }
     }
+    
+    // !!! CRITICAL FIX: Ensure Java 17 for both Java and Kotlin compilers !!!
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+
     packagingOptions {
         pickFirst 'lib/*/libc++_shared.so'
         pickFirst 'lib/*/libopencv_java4.so'

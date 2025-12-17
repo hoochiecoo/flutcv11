@@ -1,5 +1,4 @@
 package com.example.opencv_flutter_test
-
 import android.graphics.Bitmap
 import android.graphics.Color
 import io.flutter.embedding.android.FlutterActivity
@@ -11,18 +10,14 @@ import org.opencv.core.*
 import org.opencv.imgproc.Imgproc
 import java.io.File
 import java.io.FileOutputStream
-
 class MainActivity: FlutterActivity() {
     private val CHANNEL = "opencv_channel"
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler { call, result ->
-            if (call.method == "processImage") {
-                result.success(processImage())
-            } else { result.notImplemented() }
+            if (call.method == "processImage") { result.success(processImage()) } else { result.notImplemented() }
         }
     }
-
     private fun processImage(): String {
         OpenCVLoader.initDebug()
         val bmp = Bitmap.createBitmap(500, 500, Bitmap.Config.ARGB_8888)
@@ -36,7 +31,7 @@ class MainActivity: FlutterActivity() {
         Imgproc.Canny(src, src, 50.0, 150.0)
         val out = Bitmap.createBitmap(src.cols(), src.rows(), Bitmap.Config.ARGB_8888)
         Utils.matToBitmap(src, out)
-        val file = File(cacheDir, "res_v9.png")
+        val file = File(cacheDir, "res_v10.png")
         FileOutputStream(file).use { out.compress(Bitmap.CompressFormat.PNG, 100, it) }
         return file.absolutePath
     }
