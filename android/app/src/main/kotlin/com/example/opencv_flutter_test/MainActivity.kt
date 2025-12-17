@@ -28,22 +28,22 @@ class MainActivity: FlutterActivity() {
 
     private fun processImage(): String {
         OpenCVLoader.initDebug()
-        val bitmap = Bitmap.createBitmap(500, 500, Bitmap.Config.ARGB_8888)
-        val canvas = android.graphics.Canvas(bitmap)
-        canvas.drawColor(Color.BLACK)
-        val paint = android.graphics.Paint().apply { color = Color.GREEN; strokeWidth = 15f; style = android.graphics.Paint.Style.STROKE }
-        canvas.drawCircle(250f, 250f, 150f, paint)
+        val bmp = Bitmap.createBitmap(500, 500, Bitmap.Config.ARGB_8888)
+        val canvas = android.graphics.Canvas(bmp)
+        canvas.drawColor(Color.WHITE)
+        val p = android.graphics.Paint().apply { color = Color.RED; strokeWidth = 20f; style = android.graphics.Paint.Style.STROKE }
+        canvas.drawRect(50f, 50f, 450f, 450f, p)
 
         val src = Mat()
-        Utils.bitmapToMat(bitmap, src)
+        Utils.bitmapToMat(bmp, src)
         Imgproc.cvtColor(src, src, Imgproc.COLOR_RGB2GRAY)
         Imgproc.Canny(src, src, 50.0, 150.0)
         
-        val resBmp = Bitmap.createBitmap(src.cols(), src.rows(), Bitmap.Config.ARGB_8888)
-        Utils.matToBitmap(src, resBmp)
+        val out = Bitmap.createBitmap(src.cols(), src.rows(), Bitmap.Config.ARGB_8888)
+        Utils.matToBitmap(src, out)
 
-        val file = File(cacheDir, "out.png")
-        FileOutputStream(file).use { resBmp.compress(Bitmap.CompressFormat.PNG, 100, it) }
+        val file = File(cacheDir, "result.png")
+        FileOutputStream(file).use { out.compress(Bitmap.CompressFormat.PNG, 100, it) }
         return file.absolutePath
     }
 }

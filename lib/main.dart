@@ -2,38 +2,37 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-void main() => runApp(const MaterialApp(home: OpenCVTest()));
+void main() => runApp(const MaterialApp(home: OpenCVApp()));
 
-class OpenCVTest extends StatefulWidget {
-  const OpenCVTest({super.key});
+class OpenCVApp extends StatefulWidget {
+  const OpenCVApp({super.key});
   @override
-  State<OpenCVTest> createState() => _OpenCVTestState();
+  State<OpenCVApp> createState() => _OpenCVAppState();
 }
 
-class _OpenCVTestState extends State<OpenCVTest> {
+class _OpenCVAppState extends State<OpenCVApp> {
   static const platform = MethodChannel('opencv_channel');
-  String? _path;
+  String? _image;
 
   Future<void> _process() async {
     try {
-      final String? result = await platform.invokeMethod('processImage');
-      setState(() => _path = result);
+      final String? path = await platform.invokeMethod('processImage');
+      setState(() => _image = path);
     } catch (e) {
-      debugPrint("Error: $e");
+      print(e);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('OpenCV Modern Gradle')),
+      appBar: AppBar(title: const Text('OpenCV Fix v5')),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            if (_path != null) Image.file(File(_path!), height: 300),
-            const SizedBox(height: 20),
-            ElevatedButton(onPressed: _process, child: const Text('Process Image')),
+            if (_image != null) Image.file(File(_image!), height: 300),
+            ElevatedButton(onPressed: _process, child: const Text('Run OpenCV')),
           ],
         ),
       ),

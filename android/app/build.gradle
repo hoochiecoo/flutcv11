@@ -3,11 +3,9 @@ plugins {
     id "org.jetbrains.kotlin.android"
     id "dev.flutter.flutter-gradle-plugin"
 }
-
 android {
     namespace "com.example.opencv_flutter_test"
     compileSdkVersion 34
-    
     defaultConfig {
         applicationId "com.example.opencv_flutter_test"
         minSdkVersion 21
@@ -15,7 +13,6 @@ android {
         versionCode 1
         versionName "1.0"
     }
-
     packagingOptions {
         pickFirst 'lib/*/libc++_shared.so'
         pickFirst 'lib/*/libopencv_java4.so'
