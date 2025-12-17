@@ -1,0 +1,52 @@
+name: Flutter Android CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up JDK
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+
+    - name: Set up Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: 'stable'
+
+    - name: Flutter Pub Get
+      run: flutter pub get
+
+    - name: Download and Setup OpenCV
+      run: |
+        echo "Downloading OpenCV SDK..."
+        wget -q https://github.com/opencv/opencv/releases/download/4.12.0/opencv-4.12.0-android-sdk.zip
+        unzip -q opencv-4.12.0-android-sdk.zip
+        mv OpenCV-android-sdk opencv
+
+        # Создаём jniLibs если нет
+        mkdir -p android/app/src/main/jniLibs
+
+        # Копируем все архитектуры в jniLibs
+        for arch in arm64-v8a armeabi-v7a x86 x86_64; do
+          mkdir -p android/app/src/main/jniLibs/$arch
+          cp -r opencv/sdk/native/libs/$arch/* android/app/src/main/jniLibs/$arch/
+        done
+
+    - name: Build Debug APK
+      run: flutter build apk --debug
+
+    - name: Upload APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: app-debug
+        path: build/app/outputs/flutter-apk/app-debug.apk
