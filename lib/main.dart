@@ -26,12 +26,13 @@ class _OpenCVTestState extends State<OpenCVTest> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('OpenCV AndroidX Fix')),
+      appBar: AppBar(title: const Text('OpenCV Modern Gradle')),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             if (_path != null) Image.file(File(_path!), height: 300),
+            const SizedBox(height: 20),
             ElevatedButton(onPressed: _process, child: const Text('Process Image')),
           ],
         ),
