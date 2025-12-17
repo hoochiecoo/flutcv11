@@ -1,0 +1,36 @@
+plugins {
+    id "com.android.application"
+    id "org.jetbrains.kotlin.android"
+    id "dev.flutter.flutter-gradle-plugin"
+}
+
+android {
+    namespace "com.example.opencv_flutter_test"
+    compileSdkVersion 35
+    defaultConfig {
+        applicationId "com.example.opencv_flutter_test"
+        minSdkVersion 21
+        targetSdkVersion 35
+        versionCode 1
+        versionName "1.0"
+        ndk { abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86_64' }
+    }
+    
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+
+    packagingOptions {
+        pickFirst 'lib/*/libc++_shared.so'
+        pickFirst 'lib/*/libopencv_java4.so'
+    }
+}
+
+dependencies {
+    // Подключаем JAR файл OpenCV, который CI положит в папку libs
+    implementation files('libs/opencv_java4.jar')
+}
