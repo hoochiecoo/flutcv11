@@ -19,7 +19,7 @@ class _OpenCVAppState extends State<OpenCVApp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('OpenCV v11 JAR Fix')),
+      appBar: AppBar(title: const Text('OpenCV v12 Final')),
       body: Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
             if (_image != null) Image.file(File(_image!), height: 300),
             ElevatedButton(onPressed: _process, child: const Text('Run Processing')),
