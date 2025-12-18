@@ -24,7 +24,7 @@ class MainActivity: FlutterActivity() {
         val bmp = Bitmap.createBitmap(500, 500, Bitmap.Config.ARGB_8888)
         val canvas = android.graphics.Canvas(bmp)
         canvas.drawColor(Color.LTGRAY)
-        val p = android.graphics.Paint().apply { color = Color.GREEN; strokeWidth = 20f; style = android.graphics.Paint.Style.STROKE }
+        val p = android.graphics.Paint().apply { color = Color.CYAN; strokeWidth = 20f; style = android.graphics.Paint.Style.STROKE }
         canvas.drawRect(50f, 50f, 450f, 450f, p)
         val src = Mat()
         Utils.bitmapToMat(bmp, src)
@@ -32,7 +32,7 @@ class MainActivity: FlutterActivity() {
         Imgproc.Canny(src, src, 50.0, 150.0)
         val out = Bitmap.createBitmap(src.cols(), src.rows(), Bitmap.Config.ARGB_8888)
         Utils.matToBitmap(src, out)
-        val file = File(cacheDir, "res_v12.png")
+        val file = File(cacheDir, "res_v13.png")
         FileOutputStream(file).use { out.compress(Bitmap.CompressFormat.PNG, 100, it) }
         return file.absolutePath
     }

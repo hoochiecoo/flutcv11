@@ -29,7 +29,6 @@ android {
         pickFirst 'lib/*/libopencv_java4.so'
     }
 
-    // !!! ИСПРАВЛЕНИЕ ОШИБКИ ЛИНТЕРА !!!
     lintOptions {
         checkReleaseBuilds false
         abortOnError false
@@ -37,6 +36,6 @@ android {
 }
 
 dependencies {
-    // Надежное подключение всех jar файлов из папки libs
+    // Подключаем извлеченный JAR
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 }
