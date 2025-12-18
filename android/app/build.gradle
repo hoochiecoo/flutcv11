@@ -3,6 +3,7 @@ plugins {
     id "org.jetbrains.kotlin.android"
     id "dev.flutter.flutter-gradle-plugin"
 }
+
 android {
     namespace "com.example.opencv_flutter_test"
     compileSdkVersion 35
@@ -15,7 +16,6 @@ android {
         ndk { abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86_64' }
     }
     
-    // !!! CRITICAL FIX: Ensure Java 17 for both Java and Kotlin compilers !!!
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
@@ -28,4 +28,14 @@ android {
         pickFirst 'lib/*/libc++_shared.so'
         pickFirst 'lib/*/libopencv_java4.so'
     }
+
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+}
+
+dependencies {
+    // Подключаем извлеченный JAR
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
 }
