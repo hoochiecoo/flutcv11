@@ -25,24 +25,32 @@ jobs:
         
         echo ">>> Setting up JNI Libs (.so)..."
         mkdir -p android/app/src/main/jniLibs
+        # Копируем нативные библиотеки
         cp -r OpenCV-android-sdk/sdk/native/libs/* android/app/src/main/jniLibs/
         
-        echo ">>> Setting up Java Libs (.jar)..."
+        echo ">>> Setting up Java Libs (Extracting from AAR)..."
         mkdir -p android/app/libs
         
-        # Находим jar файл и сохраняем путь в переменную
-        JAR_FILE=$(find OpenCV-android-sdk -name "opencv_java4.jar" | head -n 1)
+        # 1. Ищем любой .aar файл в папке SDK
+        AAR_FILE=$(find OpenCV-android-sdk -name "*.aar" | head -n 1)
         
-        if [ -z "$JAR_FILE" ]; then
-          echo "!!! ERROR: opencv_java4.jar NOT FOUND in extracted SDK !!!"
-          find OpenCV-android-sdk -name "*.jar"
+        if [ -z "$AAR_FILE" ]; then
+          echo "!!! ERROR: No .aar file found in SDK !!!"
+          ls -R OpenCV-android-sdk
           exit 1
         fi
         
-        echo ">>> Found jar at: $JAR_FILE"
-        cp "$JAR_FILE" android/app/libs/opencv_java4.jar
+        echo ">>> Found AAR at: $AAR_FILE"
         
-        echo ">>> Verifying file existence:"
+        # 2. Извлекаем classes.jar из AAR и сохраняем как opencv_java4.jar
+        unzip -p "$AAR_FILE" classes.jar > android/app/libs/opencv_java4.jar
+        
+        if [ ! -s android/app/libs/opencv_java4.jar ]; then
+             echo "!!! ERROR: Failed to extract classes.jar or file is empty !!!"
+             exit 1
+        fi
+        
+        echo ">>> Success! Verifying libs:"
         ls -l android/app/libs/
 
     - name: Build APK
