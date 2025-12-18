@@ -1,53 +1,59 @@
-name: Flutter Android CI
-
-on:
-  push:
-    branches: [main, master]
-  pull_request:
-    branches: [main, master]
-
+on: [push, pull_request]
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v4
-
-    - name: Set up JDK
-      uses: actions/setup-java@v4
+    - uses: actions/setup-java@v4
       with:
         java-version: '17'
-        distribution: 'temurin' 
-
-    - name: Set up Flutter
-      uses: subosito/flutter-action@v2
+        distribution: 'temurin'
+    - uses: subosito/flutter-action@v2
       with:
         channel: 'stable'
-
-    - name: Flutter Pub Get
-      run: flutter pub get
-
-    - name: Download and Setup OpenCV
+    
+    - name: Configure Environment
       run: |
-        echo "Downloading OpenCV SDK..."
-        wget -q https://github.com/opencv/opencv/releases/download/4.12.0/opencv-4.12.0-android-sdk.zip
-        unzip -q opencv-4.12.0-android-sdk.zip
-        mv OpenCV-android-sdk opencv
+        echo "flutter.sdk=$FLUTTER_ROOT" > android/local.properties
+        echo "sdk.dir=$ANDROID_SDK_ROOT" >> android/local.properties
 
-        # Создаём jniLibs если нет
+    - name: Download & Install OpenCV
+      run: |
+        echo ">>> Downloading OpenCV..."
+        wget -q https://github.com/opencv/opencv/releases/download/4.10.0/opencv-4.10.0-android-sdk.zip -O opencv.zip
+        unzip -q opencv.zip
+        
+        echo ">>> Setting up JNI Libs (.so)..."
         mkdir -p android/app/src/main/jniLibs
+        # Копируем нативные библиотеки
+        cp -r OpenCV-android-sdk/sdk/native/libs/* android/app/src/main/jniLibs/
+        
+        echo ">>> Setting up Java Libs (Extracting from AAR)..."
+        mkdir -p android/app/libs
+        
+        # 1. Ищем любой .aar файл в папке SDK
+        AAR_FILE=$(find OpenCV-android-sdk -name "*.aar" | head -n 1)
+        
+        if [ -z "$AAR_FILE" ]; then
+          echo "!!! ERROR: No .aar file found in SDK !!!"
+          ls -R OpenCV-android-sdk
+          exit 1
+        fi
+        
+        echo ">>> Found AAR at: $AAR_FILE"
+        
+        # 2. Извлекаем classes.jar из AAR и сохраняем как opencv_java4.jar
+        unzip -p "$AAR_FILE" classes.jar > android/app/libs/opencv_java4.jar
+        
+        if [ ! -s android/app/libs/opencv_java4.jar ]; then
+             echo "!!! ERROR: Failed to extract classes.jar or file is empty !!!"
+             exit 1
+        fi
+        
+        echo ">>> Success! Verifying libs:"
+        ls -l android/app/libs/
 
-        # Копируем все архитектуры в jniLibs
-        for arch in arm64-v8a armeabi-v7a x86 x86_64; do
-          mkdir -p android/app/src/main/jniLibs/$arch
-          cp -r opencv/sdk/native/libs/$arch/* android/app/src/main/jniLibs/$arch/
-        done
-
-    - name: Build Debug APK
-      run: flutter build apk --debug
-
-    - name: Upload APK
-      uses: actions/upload-artifact@v4
-      with:
-        name: app-debug
-        path: build/app/outputs/flutter-apk/app-debug.apk
+    - name: Build APK
+      run: |
+        flutter clean
+        flutter build apk --debug --android-skip-build-dependency-validation --no-pub --verbose
